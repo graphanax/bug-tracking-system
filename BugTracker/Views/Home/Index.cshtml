@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "Issues";
+}
+
+<div>
+    <div>
+        <input placeholder="Search or filter results..." aria-label="Search or filter results...">
+    </div>
+
+    <button aria-label="Search" type="button">
+   
+            <use href="~/images/search.png"></use>
+      
+    </button>
+</div>
+
+<table class="table table-responsive-xl">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Assignee</th>
+        <th>Priority</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="alert" role="alert">
+        <td>
+            <span>#1</span>
+        </td>
+        <td>
+            <div class="email">
+                <span>Very serious security problem</span>
+                <span>updated 1 hour ago</span>
+            </div>
+        </td>
+        <td>
+            <div class="email">
+                <span>Artyom</span>
+                <span>created 2 days ago</span>
+            </div>
+        </td>
+        <td>
+            <div>
+                <span>—</span>
+
+            </div>
+        </td>
+        <td class="status">
+            <span class="active">Active</span>
+        </td>
+        <td class="status">
+            <span class="active">Active</span>
+        </td>
+    </tr>
+    <tr class="alert" role="alert">
+            <td>
+                <span>#1</span>
+            </td>
+            <td>
+                <div class="email">
+                    <span>Very serious security problem</span>
+                    <span>updated 1 hour ago</span>
+                </div>
+            </td>
+            <td>
+                <div class="email">
+                    <span>Artyom</span>
+                    <span>created 2 days ago</span>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <span>—</span>
+    
+                </div>
+            </td>
+            <td class="status">
+                <span class="active">Active</span>
+            </td>
+            <td class="status">
+                <span class="active">Active</span>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,70 @@
+﻿@model List<BugTracker.Models.ViewModels.IssueListViewModel>
+
+@{
+    ViewData["Title"] = "Issues";
+}
+
+<div>
+    <div>
+        <input placeholder="Search or filter results..." aria-label="Search or filter results...">
+    </div>
+
+    <button aria-label="Search" type="button">
+   
+            <use href="~/images/search.png"></use>
+      
+    </button>
+</div>
+
+<table class="table table-responsive-xl">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Assignee</th>
+        <th>Priority</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var issue in Model)
+    {
+        <tr class="alert" role="alert">
+            <td>
+                <span>#@issue.Id</span>
+            </td>
+            <td>
+                <div class="email">
+                    <span>@issue.Title</span>
+                    <span>updated @issue.Updated</span>
+                </div>
+            </td>
+            <td>
+                <div class="email">
+                    <span>Artyom</span>
+                    <span>created @issue.Created</span>
+                </div>
+            </td>
+            <td>
+                <div>
+                    @if (issue.AssignedTo == null)
+                    {
+                        <span>—</span>
+                    }
+                    else
+                    {
+                        <span>@issue.AssignedTo</span>
+                    }
+                </div>
+            </td>
+            <td class="status">
+                <span class="active">@issue.Priority</span>
+            </td>
+            <td class="status">
+                <span class="active">@issue.Status</span>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
