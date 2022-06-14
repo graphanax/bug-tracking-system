@@ -10,7 +10,10 @@ namespace BugTracker.Data
             
         }
 
-        //public DbSet<User> Users;
         public DbSet<Role> Roles { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Status> Statuses { get; set; }
+        public DbSet<Priority> Priorities { get; set; }
+        public DbSet<Issue> Issues { get; set; }
     }
 }

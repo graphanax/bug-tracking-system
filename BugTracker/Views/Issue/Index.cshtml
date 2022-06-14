@@ -10,9 +10,9 @@
     </div>
 
     <button aria-label="Search" type="button">
-   
-            <use href="~/images/search.png"></use>
-      
+
+        <use href="~/images/search.png"></use>
+
     </button>
 </div>
 
@@ -36,13 +36,13 @@
             </td>
             <td>
                 <div class="email">
-                    <span>@issue.Title</span>
+                    <span><a href="@Url.Action("DetailIssue", "Issue", new { issueId = issue.Id })">@issue.Title</a></span>
                     <span>updated @issue.Updated</span>
                 </div>
             </td>
             <td>
                 <div class="email">
-                    <span>Artyom</span>
+                    <span>@issue.CreatedBy</span>
                     <span>created @issue.Created</span>
                 </div>
             </td>
@@ -59,10 +59,30 @@
                 </div>
             </td>
             <td class="status">
-                <span class="active">@issue.Priority</span>
+                @switch (issue.Priority)
+                {
+                    case "ASAP":
+                    case "High":
+                        <span class="high">@issue.Priority</span>
+                        break;
+                    case "Normal":
+                        <span class="normal">@issue.Priority</span>
+                        break;
+                    case "Low":
+                        <span class="low">@issue.Priority</span>
+                        break;
+                }
             </td>
             <td class="status">
-                <span class="active">@issue.Status</span>
+                @switch (issue.Status)
+                {
+                    case "Closed":
+                        <span class="low">@issue.Status</span>
+                        break;
+                    case "Opened":
+                        <span class="high">@issue.Status</span>
+                        break;
+                }
             </td>
         </tr>
     }

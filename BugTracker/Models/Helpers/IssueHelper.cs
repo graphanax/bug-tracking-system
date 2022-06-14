@@ -1,26 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BugTracker.Data;
 
 namespace BugTracker.Models.Helpers
 {
     public class IssueHelper
     {
-        public List<Issue> GetIssues()
+        private readonly ApplicationDbContext _dbContext;
+
+        public IssueHelper(ApplicationDbContext dbContext)
         {
-            var dateTime = new DateTime();
-            var status = new Status {Id = 1, Name = "Assigned"};
-            var priority = new Priority {Id = 1, Name = "High"};
-            var role = new Role {Id = 1, Name = "TestRole"};
-            var user = new User {Id = 1, Email = "test@bug.com", Login = "Account", PasswordHash = "34243", Role = role};
-            return new List<Issue>()
-            {
-                new Issue
-                {
-                    Id = 1, Title = "Test issue from code", AssignedTo = null, CreatedBy = user, Description = "Test",
-                    Created = dateTime, Updated = dateTime, Priority = priority, Status = status
-                }
-            };
+            _dbContext = dbContext;
+        }
+
+        public List<Issue> GetAllIssues()
+        {
+            return _dbContext.Issues.ToList();
+        }
+
+        public Issue GetIssueById(int id)
+        {
+            var result = _dbContext.Issues.Where(i => i.Id == id);
+            return !result.Any() ? null : result.First();
         }
     }
 }

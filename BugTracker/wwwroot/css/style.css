@@ -8220,15 +8220,25 @@ h1, h2, h3, h4, h5,
       height: 10px;
       content: '';
       border-radius: 50%; }
-  .table tbody td.status .active {
+  .table tbody td.status .undefined {
+    background: #cfd6f6;
+    color: #1f36a7; }
+  .table tbody td.status .undefined:after {
+    background: #233dbd; }
+  .table tbody td.status .low {
     background: #cff6dd;
     color: #1fa750; }
-    .table tbody td.status .active:after {
+    .table tbody td.status .low:after {
       background: #23bd5a; }
-  .table tbody td.status .waiting {
+  .table tbody td.status .high {
+    background: #f6cfd5;
+    color: #a71f46; }
+  .table tbody td.status .high:after {
+  background: #bd2354; }
+  .table tbody td.status .normal {
     background: #fdf5dd;
     color: #cfa00c; }
-    .table tbody td.status .waiting:after {
+    .table tbody td.status .normal:after {
       background: #f2be1d; }
   .table tbody td .img {
     width: 50px;

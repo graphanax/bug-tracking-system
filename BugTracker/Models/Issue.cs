@@ -1,18 +1,32 @@
 ﻿#nullable enable
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BugTracker.Models
 {
     public class Issue
     {
         public int Id { get; set; }
+        
         public string Title { get; set; } = null!;
         public string? Description { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Updated { get; set; }
-        public User CreatedBy { get; set; } = null!;
-        public User? AssignedTo { get; set; }
-        public Priority Priority { get; set; }
-        public Status Status { get; set; }
+        
+        [Column("created_by")]
+        public int CreatedById { get; set; }
+        public virtual User CreatedBy { get; set; } = null!;
+
+        [Column("assigned_to")]
+        public int? AssignedToId { get; set; }
+        public virtual User? AssignedTo { get; set; }
+
+        [Column("priority")]
+        public int PriorityId { get; set; }
+        public virtual Priority Priority { get; set; } = null!;
+
+        [Column("status")]
+        public int StatusId { get; set; }
+        public virtual Status Status { get; set; } = null!;
     }
 }

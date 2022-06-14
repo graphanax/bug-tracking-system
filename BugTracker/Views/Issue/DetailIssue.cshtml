@@ -1,0 +1,70 @@
+﻿@model BugTracker.Models.ViewModels.IssueListViewModel
+@{
+    ViewBag.Title = $@"Details of issue #{Model.Id}";
+}
+<style>
+.btn {
+  background-color: DodgerBlue;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.btn:hover {
+  background-color: RoyalBlue;
+}
+</style>
+
+<div class="container-fluid">
+    <div class="py-3">
+        <h6 class="m-0 f">Issue #@Model.Id</h6>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered display-5">
+                    <thead>
+                    <tr>
+                        <td>
+                            <div>
+                                <b>@Model.Title</b>
+                            </div>
+                            <div>
+                                @Model.Description
+                            </div>
+                            <hr class="sidebar-divider my-0">
+                            <div>
+                                Priority: @Model.Priority
+                            </div>
+                            <div>
+                                Status: @Model.Status
+                            </div>
+                            <hr class="sidebar-divider my-0">
+                            <div>
+                                <span>Author: @Model.CreatedBy</span> &nbsp;&nbsp;
+                            </div>
+                            <div>
+                                <span>Assignee: @(Model.AssignedTo ?? "No one assigned.")</span>
+                            </div>
+                            <div>
+
+                            </div>
+                            <hr class="sidebar-divider my-0">
+                            <div>
+                                <span>Created date: @Model.Created </span> &nbsp; &nbsp;
+                            </div>
+                            <div>
+                                <span>@(Model.Updated.HasValue ? "Updated date: " + Model.Updated : "")</span>
+                            </div>
+                        </td>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn" style="width:100%">Edit details of issue</button>
+</div>
