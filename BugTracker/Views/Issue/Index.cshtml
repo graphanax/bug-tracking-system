@@ -5,15 +5,16 @@
 }
 
 <div>
-    <div>
-        <input placeholder="Search or filter results..." aria-label="Search or filter results...">
+    <div class="input-group">
+        <input type="search" class="form-control" placeholder="Search..." aria-label="Search..." aria-describedby="search-addon"/>
+        <button class="input-group-text">
+            <i class="fas fa-search"></i>
+        </button>
+
+        <a class="input-group-text" href="@Url.Action("CreateIssue", "Issue")" , role="button">
+            <i class="fas fa-plus"></i>
+        </a>
     </div>
-
-    <button aria-label="Search" type="button">
-
-        <use href="~/images/search.png"></use>
-
-    </button>
 </div>
 
 <table class="table table-responsive-xl">
@@ -36,8 +37,17 @@
             </td>
             <td>
                 <div class="email">
-                    <span><a href="@Url.Action("DetailIssue", "Issue", new { issueId = issue.Id })">@issue.Title</a></span>
-                    <span>updated @issue.Updated</span>
+                    <span>
+                        <a href="@Url.Action("DetailIssue", "Issue", new {issueId = issue.Id})">@issue.Title</a>
+                    </span>
+                    @if (issue.Updated != null)
+                    {
+                        <span>updated @issue.Updated</span>
+                    }
+                    else
+                    {
+                        <span>there are no updates</span>
+                    }
                 </div>
             </td>
             <td>
@@ -79,8 +89,8 @@
                     case "Closed":
                         <span class="low">@issue.Status</span>
                         break;
-                    case "Opened":
-                        <span class="high">@issue.Status</span>
+                    case "Open":
+                        <span class="normal">@issue.Status</span>
                         break;
                 }
             </td>

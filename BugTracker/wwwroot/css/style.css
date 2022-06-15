@@ -1333,6 +1333,7 @@ pre {
 
 .table {
   width: 100%;
+  margin-top: 15px;
   margin-bottom: 1rem;
   color: #212529; }
   .table th,

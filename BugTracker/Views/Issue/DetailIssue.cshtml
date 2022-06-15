@@ -1,26 +1,12 @@
-﻿@model BugTracker.Models.ViewModels.IssueListViewModel
+﻿@model BugTracker.Models.ViewModels.IssueDetailsViewModel
 @{
-    ViewBag.Title = $@"Details of issue #{Model.Id}";
+    ViewBag.Title = $"Details of issue #{Model.Id}";
 }
-<style>
-.btn {
-  background-color: DodgerBlue;
-  border: none;
-  color: white;
-  padding: 12px 20px;
-  cursor: pointer;
-  font-size: 16px;
-}
-.btn:hover {
-  background-color: RoyalBlue;
-}
-</style>
 
 <div class="container-fluid">
     <div class="py-3">
-        <h6 class="m-0 f">Issue #@Model.Id</h6>
+        <h6 class="m-0">Issue #@Model.Id</h6>
     </div>
-
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
@@ -29,7 +15,15 @@
                     <tr>
                         <td>
                             <div>
-                                <b>@Model.Title</b>
+                                <b>@Model.Title</b> |
+                                @if (Model.Status == "Open")
+                                {
+                                    <a href="@Url.Action("ChangeIssueStatus", "Issue", new {issueId = Model.Id, statusName = "Closed"})">Close issue</a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("ChangeIssueStatus", "Issue", new {issueId = Model.Id, statusName = "Open"})">Reopen issue</a>
+                                }
                             </div>
                             <div>
                                 @Model.Description
@@ -43,17 +37,16 @@
                             </div>
                             <hr class="sidebar-divider my-0">
                             <div>
-                                <span>Author: @Model.CreatedBy</span> &nbsp;&nbsp;
+                                <span>Author: @Model.CreatedBy</span>
                             </div>
                             <div>
                                 <span>Assignee: @(Model.AssignedTo ?? "No one assigned.")</span>
                             </div>
                             <div>
-
                             </div>
                             <hr class="sidebar-divider my-0">
                             <div>
-                                <span>Created date: @Model.Created </span> &nbsp; &nbsp;
+                                <span>Created date: @Model.Created </span>
                             </div>
                             <div>
                                 <span>@(Model.Updated.HasValue ? "Updated date: " + Model.Updated : "")</span>
@@ -66,5 +59,5 @@
         </div>
     </div>
 
-    <button class="btn" style="width:100%">Edit details of issue</button>
+    <a class="btn btn-primary" href="@Url.Action("EditIssue", "Issue", new { issueId = Model.Id })" , role="button">Edit issue details</a>
 </div>

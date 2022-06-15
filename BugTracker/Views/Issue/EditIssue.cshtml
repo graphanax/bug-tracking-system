@@ -1,0 +1,59 @@
+﻿@model BugTracker.Models.ViewModels.EditIssueViewModel
+@{
+    ViewBag.Title = $"Edit issue #{Model.Id}";
+    ViewBag.TId = Model.Id;
+}
+
+<div class="container-fluid">
+    <div class="py-3">
+        <h6 class="m-0">@ViewBag.Title</h6>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+
+                <form method="post" enctype="multipart/form-data">
+                    <table class="table table-bordered display-5">
+                        @Html.Hidden("Id", Model.Id)
+                        <thead>
+                        <tr>
+                            <td>
+                                <div>
+                                    @Html.LabelFor(Model => Model.AssignedToId, "Assignee:")
+                                    @Html.DropDownListFor(Model => Model.AssignedToId, new SelectList(Model.Users, "Id", "Login"),
+                                        "-Select assignee-",
+                                        new {@class = "form-control"})
+                                </div>
+                                <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.AssignedToId) </div>
+
+                                <div>
+                                    @Html.LabelFor(Model => Model.Title, "Title:")
+                                    @Html.TextBoxFor(Model => Model.Title, new {@class = "form-control", placeholder = "Type issue name..."})
+                                </div>
+                                <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Title) </div>
+
+                                <div>
+                                    @Html.LabelFor(Model => Model.Description, "Description:")
+                                    @Html.TextAreaFor(Model => Model.Description, new {@class = "form-control  ", placeholder = "Type issue description..."})
+                                </div>
+                                <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.Description) </div>
+
+                                <div>
+                                    @Html.LabelFor(Model => Model.PriorityId, "Priority:")
+                                    @Html.DropDownListFor(Model => Model.PriorityId, new SelectList(Model.Priorities, "Id", "Name"),
+                                        "-Select a priority-",
+                                        new {@class = "form-control"})
+                                </div>
+                                <div class="text-danger"> @Html.ValidationMessageFor(Model => Model.PriorityId) </div>
+                            </td>
+                        </tr>
+                        </thead>
+                    </table>
+                    <button type="submit" class="btn btn-success">Save changes</button>
+                    <a class="btn btn-primary" href="@Url.Action("Index", "Issue")" role="button">Back</a>
+                    <a class="btn btn-danger" href="@Url.Action("DeleteIssue", "Issue", new {issueId = Model.Id})" role="button">Delete</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
