@@ -14,10 +14,10 @@ namespace BugTracker.Models.ViewModels
         public string Description { get; set; }
         
         public int? AssignedToId { get; set; }
-        public List<User> Users { get; set; }
+        public IEnumerable<User> Users { get; set; }
 
         [Required]
         public int PriorityId { get; set; }
-        public List<Priority> Priorities { get; set; }
+        public IEnumerable<Priority> Priorities { get; set; }
     }
 }

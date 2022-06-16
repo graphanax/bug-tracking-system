@@ -18,11 +18,11 @@
                                 <b>@Model.Title</b> |
                                 @if (Model.Status == "Open")
                                 {
-                                    <a href="@Url.Action("ChangeIssueStatus", "Issue", new {issueId = Model.Id, statusName = "Closed"})">Close issue</a>
+                                    <a href="@Url.Action("ChangeIssueStatus", "Issue", new {issueId = Model.Id, statusId = 2})">Close issue</a>
                                 }
                                 else
                                 {
-                                    <a href="@Url.Action("ChangeIssueStatus", "Issue", new {issueId = Model.Id, statusName = "Open"})">Reopen issue</a>
+                                    <a href="@Url.Action("ChangeIssueStatus", "Issue", new {issueId = Model.Id, statusId = 1})">Reopen issue</a>
                                 }
                             </div>
                             <div>
