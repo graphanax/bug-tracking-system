@@ -1,6 +1,9 @@
+using System;
 using BugTracker.Data;
 using BugTracker.Data.Repositories;
+using BugTracker.Extensions;
 using BugTracker.Models;
+using BugTracker.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +21,7 @@ namespace BugTracker
         }
 
         public IConfiguration Configuration { get; }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -26,13 +29,20 @@ namespace BugTracker
                 options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"));
                 options.UseLazyLoadingProxies();
             }, ServiceLifetime.Singleton);
+            
             services.AddControllersWithViews();
+            
             services.AddScoped<EfCoreRepository<Issue, ApplicationDbContext>, EfCoreIssueRepository>();
             services.AddScoped<EfCoreRepository<User, ApplicationDbContext>, EfCoreUserRepository>();
             services.AddScoped<EfCoreRepository<Status, ApplicationDbContext>, EfCoreStatusRepository>();
             services.AddScoped<EfCoreRepository<Priority, ApplicationDbContext>, EfCorePriorityRepository>();
+
+            services.AddHttpClient<IVacancyService, VacancyService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration["VacanciesApiUrl"]);
+            }).AddRetryPolicy();
         }
-        
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -45,6 +55,7 @@ namespace BugTracker
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

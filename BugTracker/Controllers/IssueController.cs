@@ -77,7 +77,7 @@ namespace BugTracker.Controllers
                 Status = _statusRepository.GetObjectById(1).Result
             };
 
-            if (_issueRepository != null) await _issueRepository?.Create(issue);
+            if (_issueRepository != null) await _issueRepository.Create(issue);
 
             return RedirectToAction(nameof(Index));
         }
@@ -161,7 +161,7 @@ namespace BugTracker.Controllers
                 Updated = DateTime.Now
             };
 
-            if (_issueRepository != null) await _issueRepository?.Update(issue);
+            if (_issueRepository != null) await _issueRepository.Update(issue);
 
             return RedirectToAction(nameof(Index));
         }

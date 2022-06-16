@@ -1,0 +1,44 @@
+﻿@model List<BugTracker.Models.ViewModels.VacancyListViewModel>
+
+@{
+    ViewData["Title"] = "Vacancies";
+}
+
+<table class="table table-responsive-xl">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Location</th>
+        <th>Relocation</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var vacancy in Model)
+    {
+        <tr class="alert" role="alert">
+            <td>
+                <div class="email">
+                    <span>@vacancy.Title</span>
+                    <span>posted by "@vacancy.CompanyName"</span>
+
+                </div>
+            </td>
+            <td>
+                <div>
+                    <span>@vacancy.Location</span>
+                </div>
+            </td>
+            <td class="status">
+                @if (vacancy.Relocation)
+                {
+                    <span class="low">Yes</span>
+                }
+                else
+                {
+                    <span class="high">No</span>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
