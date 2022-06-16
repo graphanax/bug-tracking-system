@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using BugTracker.Data;
+using BugTracker.Data.Repositories;
 using BugTracker.Models;
 using BugTracker.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -8,13 +11,15 @@ namespace BugTracker.Controllers
 {
     public class IssueController : Controller
     {
-        private readonly IRepository<Issue> _issueRepository;
-        private readonly IRepository<User> _userRepository;
-        private readonly IRepository<Status> _statusRepository;
-        private readonly IRepository<Priority> _priorityRepository;
+        private readonly EfCoreRepository<Issue, ApplicationDbContext> _issueRepository;
+        private readonly EfCoreRepository<User, ApplicationDbContext> _userRepository;
+        private readonly EfCoreRepository<Status, ApplicationDbContext> _statusRepository;
+        private readonly EfCoreRepository<Priority, ApplicationDbContext> _priorityRepository;
 
-        public IssueController(IRepository<Issue> issueRepository, IRepository<User> userRepository,
-            IRepository<Status> statusRepository, IRepository<Priority> priorityRepository)
+        public IssueController(EfCoreRepository<Issue, ApplicationDbContext> issueRepository,
+            EfCoreRepository<User, ApplicationDbContext> userRepository,
+            EfCoreRepository<Status, ApplicationDbContext> statusRepository,
+            EfCoreRepository<Priority, ApplicationDbContext> priorityRepository)
         {
             _issueRepository = issueRepository;
             _userRepository = userRepository;
@@ -25,7 +30,7 @@ namespace BugTracker.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var model = _issueRepository.GetAllObjects().Select(i => new IssueListViewModel
+            var model = _issueRepository.GetAllObjects().Result.Select(i => new IssueListViewModel
             {
                 Id = i.Id,
                 Title = i.Title,
@@ -47,8 +52,8 @@ namespace BugTracker.Controllers
         {
             var model = new CreateIssueViewModel
             {
-                Users = _userRepository.GetAllObjects(),
-                Priorities = _priorityRepository.GetAllObjects()
+                Users = _userRepository.GetAllObjects().Result,
+                Priorities = _priorityRepository.GetAllObjects().Result
             };
 
             return View(model);
@@ -56,7 +61,7 @@ namespace BugTracker.Controllers
 
         // Post request to create a new issue
         [HttpPost]
-        public ActionResult CreateIssue(CreateIssueViewModel formData)
+        public async Task<ActionResult> CreateIssue(CreateIssueViewModel formData)
         {
             if (!ModelState.IsValid)
                 return RedirectToAction(nameof(CreateIssue));
@@ -69,11 +74,10 @@ namespace BugTracker.Controllers
                 CreatedById = 1,
                 AssignedToId = formData.AssignedToId,
                 PriorityId = formData.PriorityId,
-                Status = _statusRepository.GetObjectById(1)
+                Status = _statusRepository.GetObjectById(1).Result
             };
 
-            _issueRepository.Create(issue);
-            _issueRepository.Save();
+            if (_issueRepository != null) await _issueRepository?.Create(issue);
 
             return RedirectToAction(nameof(Index));
         }
@@ -81,7 +85,7 @@ namespace BugTracker.Controllers
         [HttpGet]
         public IActionResult DetailIssue(int issueId)
         {
-            var issue = _issueRepository.GetObjectById(issueId);
+            var issue = _issueRepository.GetObjectById(issueId).Result;
 
             if (issue == null)
                 return RedirectToAction(nameof(Index));
@@ -103,7 +107,7 @@ namespace BugTracker.Controllers
         }
 
         [HttpGet]
-        public IActionResult ChangeIssueStatus(int issueId, int statusId)
+        public async Task<IActionResult> ChangeIssueStatus(int issueId, int statusId)
         {
             var issue = new Issue
             {
@@ -111,8 +115,8 @@ namespace BugTracker.Controllers
                 StatusId = statusId,
                 Updated = DateTime.Now
             };
-            _issueRepository.Update(issue);
-            _issueRepository.Save();
+
+            if (_issueRepository != null) await _issueRepository.Update(issue);
 
             return RedirectToAction(nameof(DetailIssue), issueId);
         }
@@ -121,7 +125,7 @@ namespace BugTracker.Controllers
         [HttpGet]
         public ActionResult EditIssue(int issueId)
         {
-            var issue = _issueRepository.GetObjectById(issueId);
+            var issue = _issueRepository.GetObjectById(issueId).Result;
 
             if (issue == null)
                 return RedirectToAction(nameof(Index));
@@ -132,9 +136,9 @@ namespace BugTracker.Controllers
                 Title = issue.Title,
                 Description = issue.Description,
                 PriorityId = issue.PriorityId,
-                Priorities = _priorityRepository.GetAllObjects(),
+                Priorities = _priorityRepository.GetAllObjects().Result,
                 AssignedToId = issue.AssignedToId,
-                Users = _userRepository.GetAllObjects()
+                Users = _userRepository.GetAllObjects().Result
             };
 
             return View(model);
@@ -142,7 +146,7 @@ namespace BugTracker.Controllers
 
         // Post request to edit issue
         [HttpPost]
-        public ActionResult EditIssue(EditIssueViewModel formData, int issueId)
+        public async Task<ActionResult> EditIssue(EditIssueViewModel formData, int issueId)
         {
             if (!ModelState.IsValid)
                 return RedirectToAction(nameof(EditIssue), issueId);
@@ -157,8 +161,7 @@ namespace BugTracker.Controllers
                 Updated = DateTime.Now
             };
 
-            _issueRepository.Update(issue);
-            _issueRepository.Save();
+            if (_issueRepository != null) await _issueRepository?.Update(issue);
 
             return RedirectToAction(nameof(Index));
         }
@@ -166,8 +169,7 @@ namespace BugTracker.Controllers
         [HttpGet]
         public IActionResult DeleteIssue(int issueId)
         {
-            _issueRepository.Delete(issueId);
-            _issueRepository.Save();
+            _issueRepository?.Delete(issueId);
 
             return RedirectToAction(nameof(Index));
         }

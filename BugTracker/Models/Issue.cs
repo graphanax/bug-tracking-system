@@ -1,10 +1,11 @@
 ﻿#nullable enable
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using BugTracker.Data;
 
 namespace BugTracker.Models
 {
-    public class Issue
+    public class Issue : IEntity
     {
         public int Id { get; set; }
         

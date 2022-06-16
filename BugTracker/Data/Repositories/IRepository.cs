@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace BugTracker.Models
+namespace BugTracker.Data.Repositories
 {
-    public interface IRepository<T>
-        where T : class
+    public interface IRepository<T> where T : class, IEntity
     {
-        IEnumerable<T> GetAllObjects();
-        T GetObjectById(int id);
-        void Create(T item);
-        void Update(T item);
-        void Delete(int id);
-        void Save();
+        Task<IEnumerable<T>> GetAllObjects();
+        Task<T> GetObjectById(int id);
+        Task<T> Create(T entity);
+        Task<T> Update(T item);
+        Task<T> Delete(int id);
     }
 }

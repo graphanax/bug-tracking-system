@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using BugTracker.Data;
 
 namespace BugTracker.Models
 {
-    public class User
+    public class User : IEntity
     {
         public int Id { get; set; }
         

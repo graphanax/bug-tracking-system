@@ -1,6 +1,6 @@
 using BugTracker.Data;
+using BugTracker.Data.Repositories;
 using BugTracker.Models;
-using BugTracker.Models.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -27,10 +27,10 @@ namespace BugTracker
                 options.UseLazyLoadingProxies();
             }, ServiceLifetime.Singleton);
             services.AddControllersWithViews();
-            services.AddScoped<IRepository<Issue>, IssueRepository>();
-            services.AddScoped<IRepository<User>, UserRepository>();
-            services.AddScoped<IRepository<Status>, StatusRepository>();
-            services.AddScoped<IRepository<Priority>, PriorityRepository>();
+            services.AddScoped<EfCoreRepository<Issue, ApplicationDbContext>, EfCoreIssueRepository>();
+            services.AddScoped<EfCoreRepository<User, ApplicationDbContext>, EfCoreUserRepository>();
+            services.AddScoped<EfCoreRepository<Status, ApplicationDbContext>, EfCoreStatusRepository>();
+            services.AddScoped<EfCoreRepository<Priority, ApplicationDbContext>, EfCorePriorityRepository>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
