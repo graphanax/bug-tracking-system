@@ -1,4 +1,5 @@
 using System;
+using BugTracker.Controllers;
 using BugTracker.Data;
 using BugTracker.Data.Repositories;
 using BugTracker.Extensions;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace BugTracker
 {
@@ -29,9 +31,9 @@ namespace BugTracker
                 options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"));
                 options.UseLazyLoadingProxies();
             }, ServiceLifetime.Singleton);
-            
+
             services.AddControllersWithViews();
-            
+
             services.AddScoped<EfCoreRepository<Issue, ApplicationDbContext>, EfCoreIssueRepository>();
             services.AddScoped<EfCoreRepository<User, ApplicationDbContext>, EfCoreUserRepository>();
             services.AddScoped<EfCoreRepository<Status, ApplicationDbContext>, EfCoreStatusRepository>();
@@ -41,9 +43,15 @@ namespace BugTracker
             {
                 client.BaseAddress = new Uri(Configuration["VacanciesApiUrl"]);
             }).AddRetryPolicy();
+
+            services.AddLogging(loggingBuilder =>
+            {
+                // Output SQL queries
+                loggingBuilder.AddConsole().AddFilter(DbLoggerCategory.Database.Name, LogLevel.Information);
+            });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -51,8 +59,7 @@ namespace BugTracker
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseExceptionHandler("/Issue/Error");
                 app.UseHsts();
             }
 
@@ -67,8 +74,10 @@ namespace BugTracker
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Issue}/{action=Index}/{id?}");
             });
+            
+            logger.LogInformation("1111111111");
         }
     }
 }

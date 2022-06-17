@@ -6,21 +6,25 @@ using BugTracker.Data.Repositories;
 using BugTracker.Models;
 using BugTracker.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace BugTracker.Controllers
 {
     public class IssueController : Controller
     {
+        private readonly ILogger<IssueController> _logger;
         private readonly EfCoreRepository<Issue, ApplicationDbContext> _issueRepository;
         private readonly EfCoreRepository<User, ApplicationDbContext> _userRepository;
         private readonly EfCoreRepository<Status, ApplicationDbContext> _statusRepository;
         private readonly EfCoreRepository<Priority, ApplicationDbContext> _priorityRepository;
 
-        public IssueController(EfCoreRepository<Issue, ApplicationDbContext> issueRepository,
+        public IssueController(ILogger<IssueController> logger,
+            EfCoreRepository<Issue, ApplicationDbContext> issueRepository,
             EfCoreRepository<User, ApplicationDbContext> userRepository,
             EfCoreRepository<Status, ApplicationDbContext> statusRepository,
             EfCoreRepository<Priority, ApplicationDbContext> priorityRepository)
         {
+            _logger = logger;
             _issueRepository = issueRepository;
             _userRepository = userRepository;
             _statusRepository = statusRepository;
@@ -77,7 +81,8 @@ namespace BugTracker.Controllers
                 Status = _statusRepository.GetObjectById(1).Result
             };
 
-            if (_issueRepository != null) await _issueRepository.Create(issue);
+            await _issueRepository.Create(issue);
+            _logger.LogInformation($"Issue #{issue.Id} has been created.");
 
             return RedirectToAction(nameof(Index));
         }
@@ -116,7 +121,8 @@ namespace BugTracker.Controllers
                 Updated = DateTime.Now
             };
 
-            if (_issueRepository != null) await _issueRepository.Update(issue);
+            await _issueRepository.Update(issue);
+            _logger.LogInformation($"Status of issue #{issue.Id} has been updated to #{issue.StatusId}.");
 
             return RedirectToAction(nameof(DetailIssue), issueId);
         }
@@ -161,15 +167,22 @@ namespace BugTracker.Controllers
                 Updated = DateTime.Now
             };
 
-            if (_issueRepository != null) await _issueRepository.Update(issue);
+            await _issueRepository.Update(issue);
+            _logger.LogInformation($"Issue #{issue.Id} has been updated.");
 
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
-        public IActionResult DeleteIssue(int issueId)
+        public async Task<IActionResult> DeleteIssue(int issueId)
         {
-            _issueRepository?.Delete(issueId);
+            var issue = _issueRepository.GetObjectById(issueId).Result;
+
+            if (issue != null)
+            {
+                await _issueRepository.Delete(issue.Id);
+                _logger.LogInformation($"Issue #{issue.Id} has been created.");
+            }
 
             return RedirectToAction(nameof(Index));
         }
