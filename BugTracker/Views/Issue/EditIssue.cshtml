@@ -1,4 +1,4 @@
-﻿@model BugTracker.Models.ViewModels.EditIssueViewModel
+﻿@model BugTracker.Models.ViewModels.Issue.EditIssueViewModel
 @{
     ViewBag.Title = $"Edit issue #{Model.Id}";
     ViewBag.TId = Model.Id;
@@ -57,3 +57,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

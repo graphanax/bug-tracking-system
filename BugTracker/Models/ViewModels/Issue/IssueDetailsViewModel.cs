@@ -1,8 +1,7 @@
 ﻿#nullable enable
 using System;
-using System.Collections.Generic;
 
-namespace BugTracker.Models.ViewModels
+namespace BugTracker.Models.ViewModels.Issue
 {
     public class IssueDetailsViewModel
     {

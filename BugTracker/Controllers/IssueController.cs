@@ -5,6 +5,7 @@ using BugTracker.Data;
 using BugTracker.Data.Repositories;
 using BugTracker.Models;
 using BugTracker.Models.ViewModels;
+using BugTracker.Models.ViewModels.Issue;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

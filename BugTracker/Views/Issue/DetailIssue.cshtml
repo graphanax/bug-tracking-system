@@ -1,4 +1,4 @@
-﻿@model BugTracker.Models.ViewModels.IssueDetailsViewModel
+﻿@model BugTracker.Models.ViewModels.Issue.IssueDetailsViewModel
 @{
     ViewBag.Title = $"Details of issue #{Model.Id}";
 }
@@ -60,4 +60,5 @@
     </div>
 
     <a class="btn btn-primary" href="@Url.Action("EditIssue", "Issue", new { issueId = Model.Id })" , role="button">Edit issue details</a>
+    <a class="btn btn-primary" href="@Url.Action("Index", "Issue")" role="button">Back</a>
 </div>

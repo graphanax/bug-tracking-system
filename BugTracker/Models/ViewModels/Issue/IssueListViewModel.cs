@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System;
 
-namespace BugTracker.Models.ViewModels
+namespace BugTracker.Models.ViewModels.Issue
 {
     public class IssueListViewModel
     {

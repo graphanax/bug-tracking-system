@@ -1,4 +1,4 @@
-﻿@model BugTracker.Models.ViewModels.CreateIssueViewModel
+﻿@model BugTracker.Models.ViewModels.Issue.CreateIssueViewModel
 @{
     ViewBag.Title = "Create new issue";
 }
@@ -51,3 +51,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
