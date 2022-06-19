@@ -22,7 +22,7 @@ namespace BugTracker.Data.Repositories
             issue.Description = string.IsNullOrEmpty(item.Description) ? issue.Description : item.Description;
             issue.PriorityId = item.PriorityId == 0 ? issue.PriorityId : item.PriorityId;
             issue.StatusId = item.StatusId == 0 ? issue.StatusId : item.StatusId;
-            issue.AssignedToId = item.AssignedToId == 0 ? issue.AssignedToId : item.AssignedToId;
+            issue.AssignedToId = string.IsNullOrEmpty(item.AssignedToId) ? issue.AssignedToId : item.AssignedToId;
             issue.Updated = DateTime.Now;
             
             Context.Entry(issue).State = EntityState.Modified;

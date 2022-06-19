@@ -1,5 +1,4 @@
 using System;
-using BugTracker.Controllers;
 using BugTracker.Data;
 using BugTracker.Data.Repositories;
 using BugTracker.Extensions;
@@ -30,9 +29,10 @@ namespace BugTracker
             {
                 options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"));
                 options.UseLazyLoadingProxies();
-            }, ServiceLifetime.Singleton);
-
+            });
+            
             services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddScoped<EfCoreRepository<Issue, ApplicationDbContext>, EfCoreIssueRepository>();
             services.AddScoped<EfCoreRepository<User, ApplicationDbContext>, EfCoreUserRepository>();
@@ -68,6 +68,7 @@ namespace BugTracker
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -75,9 +76,8 @@ namespace BugTracker
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Issue}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
-            
-            logger.LogInformation("1111111111");
         }
     }
 }

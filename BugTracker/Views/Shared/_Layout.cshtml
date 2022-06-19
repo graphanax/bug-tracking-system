@@ -6,7 +6,7 @@
     <title>@ViewData["Title"]</title>
     <link rel="shortcut icon" href="~/images/bug.ico" type="image/x-icon">
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css"/>
     <link rel="stylesheet" href="~/css/style.css"/>
@@ -29,6 +29,7 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Vacancy" asp-action="Index">Vacancies</a>
                     </li>
                 </ul>
+                <partial name="~/Areas/Identity/Pages/_LoginPartial.cshtml"/>
             </div>
         </div>
     </nav>

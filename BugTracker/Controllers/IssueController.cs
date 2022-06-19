@@ -4,13 +4,15 @@ using System.Threading.Tasks;
 using BugTracker.Data;
 using BugTracker.Data.Repositories;
 using BugTracker.Models;
-using BugTracker.Models.ViewModels;
 using BugTracker.Models.ViewModels.Issue;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace BugTracker.Controllers
 {
+    [Authorize]
     public class IssueController : Controller
     {
         private readonly ILogger<IssueController> _logger;
@@ -18,18 +20,21 @@ namespace BugTracker.Controllers
         private readonly EfCoreRepository<User, ApplicationDbContext> _userRepository;
         private readonly EfCoreRepository<Status, ApplicationDbContext> _statusRepository;
         private readonly EfCoreRepository<Priority, ApplicationDbContext> _priorityRepository;
+        private readonly UserManager<User> _userManager;
 
         public IssueController(ILogger<IssueController> logger,
             EfCoreRepository<Issue, ApplicationDbContext> issueRepository,
             EfCoreRepository<User, ApplicationDbContext> userRepository,
             EfCoreRepository<Status, ApplicationDbContext> statusRepository,
-            EfCoreRepository<Priority, ApplicationDbContext> priorityRepository)
+            EfCoreRepository<Priority, ApplicationDbContext> priorityRepository,
+            UserManager<User> userManager)
         {
             _logger = logger;
             _issueRepository = issueRepository;
             _userRepository = userRepository;
             _statusRepository = statusRepository;
             _priorityRepository = priorityRepository;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -76,7 +81,7 @@ namespace BugTracker.Controllers
                 Title = formData.Title,
                 Description = formData.Description,
                 Created = DateTime.Now,
-                CreatedById = 1,
+                CreatedById = _userManager.GetUserAsync(User).Result.Id,
                 AssignedToId = formData.AssignedToId,
                 PriorityId = formData.PriorityId,
                 Status = _statusRepository.GetObjectById(1).Result

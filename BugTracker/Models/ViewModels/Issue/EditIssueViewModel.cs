@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BugTracker.Models.ViewModels.Issue
@@ -7,19 +8,19 @@ namespace BugTracker.Models.ViewModels.Issue
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "The title of issue is not specified")]
+        [Required(ErrorMessage = "The {0} of issue is not specified")]
         [StringLength(100, MinimumLength = 5,
-            ErrorMessage = "The length of the title should be from 5 to 100 characters")]
-        public string Title { get; set; }
+            ErrorMessage = "The length of the {0} should be from {2} to {1} characters")]
+        public string Title { get; set; } = null!;
 
-        public string Description { get; set; }
+        public string Description { get; set; } = null!;
 
-        public int? AssignedToId { get; set; }
-        public IEnumerable<User> Users { get; set; }
+        public string? AssignedToId { get; set; }
+        public IEnumerable<User>? Users { get; set; }
 
-        [Required(ErrorMessage = "The priority should be specified")]
+        [Required(ErrorMessage = "The {0} should be specified")]
         public int PriorityId { get; set; }
 
-        public IEnumerable<Priority> Priorities { get; set; }
+        public IEnumerable<Priority>? Priorities { get; set; } = null!;
     }
 }

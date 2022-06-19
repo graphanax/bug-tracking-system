@@ -7,10 +7,8 @@ namespace BugTracker.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            
         }
 
-        public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Priority> Priorities { get; set; }
