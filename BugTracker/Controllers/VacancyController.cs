@@ -3,10 +3,12 @@ using BugTracker.Models;
 using BugTracker.Models.ViewModels;
 using BugTracker.Services;
 using BugTracker.Services.VacancyService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BugTracker.Controllers
 {
+    [Authorize]
     public class VacancyController : Controller
     {
         private readonly IVacancyService _vacancyService;
