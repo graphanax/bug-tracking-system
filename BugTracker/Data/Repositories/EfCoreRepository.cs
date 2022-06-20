@@ -37,6 +37,11 @@ namespace BugTracker.Data.Repositories
         {
             return await Context.Set<TEntity>().FindAsync(id);
         }
+        
+        public async Task<TEntity> GetObjectById(string id)
+        {
+            return await Context.Set<TEntity>().FindAsync(id);
+        }
 
         public async Task<IEnumerable<TEntity>> GetAllObjects()
         {

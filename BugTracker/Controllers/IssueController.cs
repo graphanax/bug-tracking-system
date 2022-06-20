@@ -5,6 +5,7 @@ using BugTracker.Data;
 using BugTracker.Data.Repositories;
 using BugTracker.Models;
 using BugTracker.Models.ViewModels.Issue;
+using BugTracker.Services.ProducerNotificationService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,13 +22,14 @@ namespace BugTracker.Controllers
         private readonly EfCoreRepository<Status, ApplicationDbContext> _statusRepository;
         private readonly EfCoreRepository<Priority, ApplicationDbContext> _priorityRepository;
         private readonly UserManager<User> _userManager;
+        private readonly IRabbitMqProducer<NotificationOfIssueAssignment> _rabbitMqProducer;
 
         public IssueController(ILogger<IssueController> logger,
             EfCoreRepository<Issue, ApplicationDbContext> issueRepository,
             EfCoreRepository<User, ApplicationDbContext> userRepository,
             EfCoreRepository<Status, ApplicationDbContext> statusRepository,
             EfCoreRepository<Priority, ApplicationDbContext> priorityRepository,
-            UserManager<User> userManager)
+            UserManager<User> userManager, IRabbitMqProducer<NotificationOfIssueAssignment> rabbitMqProducer)
         {
             _logger = logger;
             _issueRepository = issueRepository;
@@ -35,6 +37,7 @@ namespace BugTracker.Controllers
             _statusRepository = statusRepository;
             _priorityRepository = priorityRepository;
             _userManager = userManager;
+            _rabbitMqProducer = rabbitMqProducer;
         }
 
         [HttpGet]
@@ -89,6 +92,9 @@ namespace BugTracker.Controllers
 
             await _issueRepository.Create(issue);
             _logger.LogInformation($"Issue #{issue.Id} has been created.");
+
+            if (!string.IsNullOrEmpty(issue.AssignedToId))
+                NotifyAssignee(issue.Id, issue.AssignedToId);
 
             return RedirectToAction(nameof(Index));
         }
@@ -176,6 +182,9 @@ namespace BugTracker.Controllers
             await _issueRepository.Update(issue);
             _logger.LogInformation($"Issue #{issue.Id} has been updated.");
 
+            if (!string.IsNullOrEmpty(issue.AssignedToId))
+                NotifyAssignee(issue.Id, issue.AssignedToId);
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -191,6 +200,15 @@ namespace BugTracker.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [NonAction]
+        private void NotifyAssignee(int issueId, string assigneeId)
+        {
+            var assigneeEmail = _userRepository.GetObjectById(assigneeId).Result.Email;
+            _logger.LogInformation($"Sending an assignment notification to {assigneeEmail}...");
+            _rabbitMqProducer.Publish(new NotificationOfIssueAssignment()
+                {IssueId = issueId, AssigneeEmail = assigneeEmail});
         }
     }
 }

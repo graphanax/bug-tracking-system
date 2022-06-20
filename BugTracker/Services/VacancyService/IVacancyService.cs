@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using BugTracker.Models.Domain.Vacancy;
 
-namespace BugTracker.Services
+namespace BugTracker.Services.VacancyService
 {
     public interface IVacancyService
     {

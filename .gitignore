@@ -11,6 +11,9 @@
 *.userosscache
 *.sln.docstates
 
+#Personal data
+MailService/Services/EmailService/EmailOptions.cs
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

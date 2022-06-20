@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using BugTracker.Models.Domain.Vacancy;
 using Newtonsoft.Json;
 
-namespace BugTracker.Services
+namespace BugTracker.Services.VacancyService
 {
     public class VacancyService : IVacancyService
     {

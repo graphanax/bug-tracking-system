@@ -21,6 +21,7 @@
       <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.13" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta1" />
       <PackageReference Include="Polly.Contrib.WaitAndRetry" Version="1.1.1" />
+      <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>

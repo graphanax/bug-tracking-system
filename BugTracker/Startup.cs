@@ -3,7 +3,8 @@ using BugTracker.Data;
 using BugTracker.Data.Repositories;
 using BugTracker.Extensions;
 using BugTracker.Models;
-using BugTracker.Services;
+using BugTracker.Services.ProducerNotificationService;
+using BugTracker.Services.VacancyService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
 
 namespace BugTracker
 {
@@ -30,7 +32,7 @@ namespace BugTracker
                 options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"));
                 options.UseLazyLoadingProxies();
             });
-            
+
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -38,6 +40,12 @@ namespace BugTracker
             services.AddScoped<EfCoreRepository<User, ApplicationDbContext>, EfCoreUserRepository>();
             services.AddScoped<EfCoreRepository<Status, ApplicationDbContext>, EfCoreStatusRepository>();
             services.AddScoped<EfCoreRepository<Priority, ApplicationDbContext>, EfCorePriorityRepository>();
+
+            services.AddScoped(_ => new ConnectionFactory
+            {
+                HostName = "localhost",
+            });
+            services.AddScoped<IRabbitMqProducer<NotificationOfIssueAssignment>, NotificationProducer>();
 
             services.AddHttpClient<IVacancyService, VacancyService>(client =>
             {

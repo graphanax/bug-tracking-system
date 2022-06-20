@@ -2,6 +2,7 @@
 using BugTracker.Models;
 using BugTracker.Models.ViewModels;
 using BugTracker.Services;
+using BugTracker.Services.VacancyService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BugTracker.Controllers
