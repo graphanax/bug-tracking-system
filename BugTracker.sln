@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugTracker", "BugTracker\Bu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailService", "MailService\MailService.csproj", "{B8F2C976-BE76-470B-B29E-763B25DAE217}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugTrackerTests", "BugTrackerTests\BugTrackerTests.csproj", "{6F1924AA-853E-4D93-B922-54BBF4D1A60D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{B8F2C976-BE76-470B-B29E-763B25DAE217}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8F2C976-BE76-470B-B29E-763B25DAE217}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8F2C976-BE76-470B-B29E-763B25DAE217}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F1924AA-853E-4D93-B922-54BBF4D1A60D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F1924AA-853E-4D93-B922-54BBF4D1A60D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F1924AA-853E-4D93-B922-54BBF4D1A60D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F1924AA-853E-4D93-B922-54BBF4D1A60D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
