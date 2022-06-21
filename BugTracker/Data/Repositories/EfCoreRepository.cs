@@ -12,14 +12,14 @@ namespace BugTracker.Data.Repositories
 
         protected EfCoreRepository(TContext context) => Context = context;
 
-        public async Task<TEntity> Create(TEntity entity)
+        public virtual async Task<TEntity> Create(TEntity entity)
         {
             await Context.Set<TEntity>().AddAsync(entity);
             await Context.SaveChangesAsync();
             return entity;
         }
 
-        public async Task<TEntity> Delete(int id)
+        public virtual async Task<TEntity> Delete(int id)
         {
             var entity = await Context.Set<TEntity>().FindAsync(id);
             if (entity == null)
@@ -33,17 +33,17 @@ namespace BugTracker.Data.Repositories
             return entity;
         }
 
-        public async Task<TEntity> GetObjectById(int id)
+        public virtual async Task<TEntity> GetObjectById(int id)
         {
             return await Context.Set<TEntity>().FindAsync(id);
         }
         
-        public async Task<TEntity> GetObjectById(string id)
+        public virtual async Task<TEntity> GetObjectById(string id)
         {
             return await Context.Set<TEntity>().FindAsync(id);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllObjects()
+        public virtual async Task<IEnumerable<TEntity>> GetAllObjects()
         {
             return await Context.Set<TEntity>().ToListAsync();
         }
