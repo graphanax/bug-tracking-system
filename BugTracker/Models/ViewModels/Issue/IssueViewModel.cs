@@ -3,7 +3,7 @@ using System;
 
 namespace BugTracker.Models.ViewModels.Issue
 {
-    public class IssueListViewModel
+    public class IssueViewModel
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;

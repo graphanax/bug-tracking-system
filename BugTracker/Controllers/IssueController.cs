@@ -43,7 +43,7 @@ namespace BugTracker.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var model = _issueRepository.GetAllObjects().Result.Select(i => new IssueListViewModel
+            var model = _issueRepository.GetAllObjects().Result.Select(i => new IssueViewModel
             {
                 Id = i.Id,
                 Title = i.Title,
