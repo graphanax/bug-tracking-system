@@ -1,6 +1,8 @@
 ﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace BugTracker.Models.ViewModels.Issue
 {
@@ -14,11 +16,29 @@ namespace BugTracker.Models.ViewModels.Issue
         public string Description { get; set; } = null!;
 
         public string? AssignedToId { get; set; }
-        public IEnumerable<User>? Users { get; set; } = null!;
+        public IEnumerable<User>? Users { get; set; }
 
         [Required(ErrorMessage = "The priority should be specified")]
         public int PriorityId { get; set; }
 
-        public IEnumerable<Priority>? Priorities { get; set; } = null!;
+        public IEnumerable<Priority>? Priorities { get; set; }
+
+        public override bool Equals(object? o)
+        {
+            if (ReferenceEquals(null, o)) return false;
+            if (ReferenceEquals(this, o)) return true;
+            return o.GetType() == GetType() && Equals((CreateIssueViewModel) o);
+        }
+
+        protected bool Equals(CreateIssueViewModel other)
+        {
+            return Title == other.Title && Description == other.Description && AssignedToId == other.AssignedToId &&
+                   Users.SequenceEqual(other.Users) && PriorityId == other.PriorityId && Priorities.SequenceEqual(other.Priorities);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Title, Description, AssignedToId, Users, PriorityId, Priorities);
+        }
     }
 }
