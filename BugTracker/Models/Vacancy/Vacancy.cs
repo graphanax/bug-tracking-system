@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BugTracker.Models.Domain.Vacancy
+namespace BugTracker.Models.Vacancy
 {
     public class Vacancy
     {

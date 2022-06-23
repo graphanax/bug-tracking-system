@@ -1,12 +1,14 @@
 ﻿#nullable enable
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using BugTracker.Attributes;
 using BugTracker.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace BugTracker.Models
 {
     [Table("aspnetusers")]
+    [LoginEmailEqual]
     public class User : IdentityUser, IEntity
     {
         public override string Id { get; set; } = null!;

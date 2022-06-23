@@ -1,9 +1,11 @@
 ﻿#nullable enable
 using System;
+using BugTracker.Attributes;
 using BugTracker.Data;
 
 namespace BugTracker.Models
 {
+    [UpdateDateIsEarlierThanAdditionDate]
     public class Issue : IEntity
     {
         public int Id { get; set; }

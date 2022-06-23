@@ -8,20 +8,20 @@ namespace BugTracker.Models.ViewModels.Issue
 {
     public class CreateIssueViewModel
     {
-        [Required(ErrorMessage = "The title of issue is not specified")]
+        [Required(ErrorMessage = "The {0} of issue is not specified")]
         [StringLength(100, MinimumLength = 5,
-            ErrorMessage = "The length of the title should be from 5 to 100 characters")]
-        public string Title { get; set; } = null!;
+            ErrorMessage = "The length of the {0} should be from {2} to {1} characters")]
+        public string Title { get; init; } = null!;
 
-        public string Description { get; set; } = null!;
+        public string Description { get; init; } = null!;
 
-        public string? AssignedToId { get; set; }
-        public IEnumerable<User>? Users { get; set; }
+        public string? AssignedToId { get; init; }
+        public IEnumerable<User>? Users { get; init; }
 
-        [Required(ErrorMessage = "The priority should be specified")]
-        public int PriorityId { get; set; }
+        [Required(ErrorMessage = "The {0} should be specified")]
+        public int PriorityId { get; init; }
 
-        public IEnumerable<Priority>? Priorities { get; set; }
+        public IEnumerable<Priority>? Priorities { get; init; }
 
         public override bool Equals(object? o)
         {
@@ -32,8 +32,10 @@ namespace BugTracker.Models.ViewModels.Issue
 
         protected bool Equals(CreateIssueViewModel other)
         {
-            return Title == other.Title && Description == other.Description && AssignedToId == other.AssignedToId &&
-                   Users.SequenceEqual(other.Users) && PriorityId == other.PriorityId && Priorities.SequenceEqual(other.Priorities);
+            return other.Priorities != null && Priorities != null && other.Users != null && Users != null &&
+                   Title == other.Title && Description == other.Description && AssignedToId == other.AssignedToId &&
+                   Users.SequenceEqual(other.Users) && PriorityId == other.PriorityId &&
+                   Priorities.SequenceEqual(other.Priorities);
         }
 
         public override int GetHashCode()

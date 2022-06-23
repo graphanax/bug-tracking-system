@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System.Net.Http;
 using System.Threading.Tasks;
-using BugTracker.Models.Domain.Vacancy;
+using BugTracker.Models.Vacancy;
 using Newtonsoft.Json;
 
 namespace BugTracker.Services.VacancyService

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BugTracker.Controllers;
 using BugTracker.Models;
-using BugTracker.Models.Domain.Vacancy;
+using BugTracker.Models.Vacancy;
 using BugTracker.Models.ViewModels;
 using BugTracker.Services.VacancyService;
 using Microsoft.AspNetCore.Mvc;

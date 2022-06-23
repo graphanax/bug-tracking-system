@@ -1,6 +1,6 @@
 ﻿#nullable enable
 using System.Threading.Tasks;
-using BugTracker.Models.Domain.Vacancy;
+using BugTracker.Models.Vacancy;
 
 namespace BugTracker.Services.VacancyService
 {

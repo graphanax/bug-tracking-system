@@ -1,4 +1,4 @@
-﻿namespace BugTracker.Models.Domain.Vacancy
+﻿namespace BugTracker.Models.Vacancy
 {
     public class Links
     {
