@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using BugTracker.Models;
 using BugTracker.Models.ViewModels;
-using BugTracker.Services;
 using BugTracker.Services.VacancyService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +25,7 @@ namespace BugTracker.Controllers
             if (vacancy == null)
                 return RedirectToAction(nameof(Index), nameof(Issue));
 
-            var model = vacancy.Data.Select(v => new VacancyListViewModel
+            var model = vacancy.Data.Select(v => new VacancyViewModel
             {
                 Title = v.Title,
                 CompanyName = v.CompanyName,
