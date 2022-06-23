@@ -133,11 +133,11 @@ namespace BugTrackerTests
             mockIssueRepo
                 .Setup(issueRepo => issueRepo.GetObjectById(It.IsAny<int>()))
                 .ReturnsAsync(null as Issue);
-            
+
             var controller = GetIssueController(issueRepoMock: mockIssueRepo);
-            
+
             const string expectedActionName = nameof(IssueController.Index);
-            const int idOfNonExistentIssue = 0; 
+            const int idOfNonExistentIssue = 0;
 
             // Act
             var result = controller.DetailIssue(idOfNonExistentIssue);
@@ -147,7 +147,7 @@ namespace BugTrackerTests
             Assert.Null(redirectToActionResult.ControllerName);
             Assert.Equal(expectedActionName, redirectToActionResult.ActionName);
         }
-        
+
         [Fact]
         public void DetailIssue_ReturnsAViewResultWithAnIssue_WhenIssueExists()
         {
@@ -156,7 +156,7 @@ namespace BugTrackerTests
             mockIssueRepo
                 .Setup(issueRepo => issueRepo.GetObjectById(It.IsAny<int>()))
                 .ReturnsAsync(GetTestIssues().First());
-            
+
             var controller = GetIssueController(issueRepoMock: mockIssueRepo);
 
             const int issueId = 1;
@@ -171,7 +171,7 @@ namespace BugTrackerTests
         }
 
         [Fact]
-        public void ChangeIssueStatus_ReturnsARedirectAndAddsIssue_WhenModelStateIsValid()
+        public void ChangeIssueStatus_ReturnsARedirectAndUpdatesIssue()
         {
             // Arrange
             var mockIssueRepo = new Mock<EfCoreRepository<Issue, ApplicationDbContext>>(null);
@@ -179,7 +179,7 @@ namespace BugTrackerTests
                 .Setup(issueRepo => issueRepo.Update(It.IsAny<Issue>()))
                 .ReturnsAsync(It.IsAny<Issue>())
                 .Verifiable();
-            
+
             var controller = GetIssueController(issueRepoMock: mockIssueRepo);
 
             const int issueId = 1;
@@ -197,8 +197,176 @@ namespace BugTrackerTests
             mockIssueRepo.Verify();
         }
 
+        [Fact]
+        public void EditIssue_ReturnsARedirect_WhenIssueDoesNotExist()
+        {
+            // Arrange
+            var mockIssueRepo = new Mock<EfCoreRepository<Issue, ApplicationDbContext>>(null);
+            mockIssueRepo
+                .Setup(issueRepo => issueRepo.GetObjectById(It.IsAny<int>()))
+                .ReturnsAsync(null as Issue);
+
+            var controller = GetIssueController(issueRepoMock: mockIssueRepo);
+
+            const string expectedActionName = nameof(IssueController.Index);
+            const int idOfNonExistentIssue = 0;
+
+            // Act
+            var result = controller.EditIssue(idOfNonExistentIssue);
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Null(redirectToActionResult.ControllerName);
+            Assert.Equal(expectedActionName, redirectToActionResult.ActionName);
+        }
+
+        [Fact]
+        public void EditIssue_ReturnsAViewResultWithAnIssue_WhenIssueExists()
+        {
+            // Arrange
+            var mockIssueRepo = new Mock<EfCoreRepository<Issue, ApplicationDbContext>>(null);
+            mockIssueRepo
+                .Setup(issueRepo => issueRepo.GetObjectById(It.IsAny<int>()))
+                .ReturnsAsync(GetTestIssues().First());
+
+            var mockUserRepo = new Mock<EfCoreRepository<User, ApplicationDbContext>>(null);
+            mockUserRepo
+                .Setup(userRepo => userRepo.GetAllObjects())
+                .ReturnsAsync(GetTestUsers());
+
+            var mockPriorityRepo = new Mock<EfCoreRepository<Priority, ApplicationDbContext>>(null);
+            mockPriorityRepo
+                .Setup(priorityRepo => priorityRepo.GetAllObjects())
+                .ReturnsAsync(GetTestPriorities());
+
+            var controller = GetIssueController(issueRepoMock: mockIssueRepo, userRepoMock: mockUserRepo,
+                priorityRepoMock: mockPriorityRepo);
+
+            const int issueId = 1;
+            var expectedModel = GetEditIssueViewModel(GetTestIssues().First());
+
+            // Act
+            var result = controller.EditIssue(issueId);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal(expectedModel, viewResult.ViewData.Model);
+        }
+
+        [Fact]
+        public void EditIssuePost_ReturnsARedirect_WhenModelStateIsInvalid()
+        {
+            // Arrange
+            var controller = GetIssueController();
+            controller.ModelState.AddModelError("Title", "Required");
+
+            const int issueId = 1;
+            var invalidModel = new EditIssueViewModel();
+
+            const string expectedActionName = nameof(IssueController.EditIssue);
+
+            // Act
+            var result = controller.EditIssue(invalidModel, issueId).Result;
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Null(redirectToActionResult.ControllerName);
+            Assert.Equal(expectedActionName, redirectToActionResult.ActionName);
+        }
+
+        [Fact]
+        public void EditIssuePost_ReturnsARedirectAndUpdatesIssue_WhenModelStateIsValid()
+        {
+            // Arrange
+            var mockIssueRepo = new Mock<EfCoreRepository<Issue, ApplicationDbContext>>(null);
+            mockIssueRepo
+                .Setup(issueRepo => issueRepo.Update(It.IsAny<Issue>()))
+                .ReturnsAsync(It.IsAny<Issue>())
+                .Verifiable();
+
+            var userStoreMock = new Mock<IUserStore<User>>();
+            var mockUserManager = new Mock<UserManager<User>>(
+                userStoreMock.Object, null, null, null, null, null, null, null, null);
+            mockUserManager
+                .Setup(userManager => userManager.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
+                .Returns(Task.FromResult(new User()));
+
+            var mockIRabbitMqProd = new Mock<IRabbitMqProducer<NotificationOfIssueAssignment>>();
+            mockIRabbitMqProd
+                .Setup(rabbitMq => rabbitMq.Publish(It.IsAny<NotificationOfIssueAssignment>()));
+
+            var controller = GetIssueController(issueRepoMock: mockIssueRepo, userManagerMock: mockUserManager,
+                rabbitMqMock: mockIRabbitMqProd);
+
+            const int issueId = 1;
+            var model = GetEditIssueViewModel(GetTestIssues().First());
+
+            const string expectedActionName = nameof(IssueController.Index);
+
+            // Act
+            var result = controller.EditIssue(model, issueId).Result;
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Null(redirectToActionResult.ControllerName);
+            Assert.Equal(expectedActionName, redirectToActionResult.ActionName);
+            mockIssueRepo.Verify();
+        }
+
+        [Fact]
+        public void DeleteIssue_ReturnsARedirect_WhenIssueDoesNotExist()
+        {
+            // Arrange
+            var mockIssueRepo = new Mock<EfCoreRepository<Issue, ApplicationDbContext>>(null);
+            mockIssueRepo
+                .Setup(issueRepo => issueRepo.GetObjectById(It.IsAny<int>()))
+                .ReturnsAsync(null as Issue);
+
+            var controller = GetIssueController(issueRepoMock: mockIssueRepo);
+
+            const string expectedActionName = nameof(IssueController.Index);
+            const int idOfNonExistentIssue = 0;
+
+            // Act
+            var result = controller.DeleteIssue(idOfNonExistentIssue).Result;
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Null(redirectToActionResult.ControllerName);
+            Assert.Equal(expectedActionName, redirectToActionResult.ActionName);
+        }
+
+        [Fact]
+        public void DeleteIssue_ReturnsARedirectAndDeletesIssue_WhenIssueExists()
+        {
+            // Arrange
+            var mockIssueRepo = new Mock<EfCoreRepository<Issue, ApplicationDbContext>>(null);
+            mockIssueRepo
+                .Setup(issueRepo => issueRepo.GetObjectById(It.IsAny<int>()))
+                .ReturnsAsync(new Issue());
+
+            mockIssueRepo
+                .Setup(issueRepo => issueRepo.Delete(It.IsAny<int>()))
+                .ReturnsAsync(It.IsAny<Issue>())
+                .Verifiable();
+
+            var controller = GetIssueController(issueRepoMock: mockIssueRepo);
+
+            const string expectedActionName = nameof(IssueController.Index);
+            const int issueId = 1;
+
+            // Act
+            var result = controller.DeleteIssue(issueId).Result;
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Null(redirectToActionResult.ControllerName);
+            Assert.Equal(expectedActionName, redirectToActionResult.ActionName);
+            mockIssueRepo.Verify();
+        }
+
         #region Setup
-        
+
         private static IssueController GetIssueController(
             Mock<ILogger<IssueController>> loggerMock = null,
             Mock<EfCoreRepository<Issue, ApplicationDbContext>> issueRepoMock = null,
@@ -377,6 +545,22 @@ namespace BugTrackerTests
             };
 
             return createIssueViewModel;
+        }
+
+        private static EditIssueViewModel GetEditIssueViewModel(Issue issue)
+        {
+            var editIssueViewModel = new EditIssueViewModel
+            {
+                Id = issue.Id,
+                Title = issue.Title,
+                Description = issue.Description,
+                PriorityId = issue.PriorityId,
+                Priorities = GetTestPriorities(),
+                AssignedToId = issue.AssignedToId,
+                Users = GetTestUsers()
+            };
+
+            return editIssueViewModel;
         }
 
         #endregion
