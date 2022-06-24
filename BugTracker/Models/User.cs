@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BugTracker.Models
 {
-    [Table("aspnetusers")]
     [LoginEmailEqual]
     public class User : IdentityUser, IEntity
     {

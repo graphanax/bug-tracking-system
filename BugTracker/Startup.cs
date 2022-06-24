@@ -43,7 +43,7 @@ namespace BugTracker
 
             services.AddScoped(_ => new ConnectionFactory
             {
-                HostName = "localhost",
+                HostName = Configuration["RabbitMqClusterHostname"]
             });
             services.AddScoped<IRabbitMqProducer<NotificationOfIssueAssignment>, NotificationProducer>();
 
