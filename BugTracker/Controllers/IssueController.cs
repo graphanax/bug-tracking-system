@@ -41,7 +41,8 @@ namespace BugTracker.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        [HttpPost]
+        public IActionResult Index(string searchString = null)
         {
             var model = _issueRepository.GetAllObjects().Result.Select(i => new IssueViewModel
             {
@@ -55,6 +56,11 @@ namespace BugTracker.Controllers
                 Priority = i.Priority.Name,
                 Status = i.Status.Name
             }).ToList();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                model = model.Where(m => m.Title.Contains(searchString)).ToList();
+            }
 
             return View(model);
         }

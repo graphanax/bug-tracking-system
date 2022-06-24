@@ -40,6 +40,28 @@ namespace BugTrackerTests
         }
 
         [Fact]
+        public void IndexPost_ReturnsAViewResult_WithAListOfIssuesThatCorrespondSearchString()
+        {
+            // Arrange
+            var mockIssueRepo = new Mock<EfCoreRepository<Issue, ApplicationDbContext>>(null);
+            mockIssueRepo
+                .Setup(issueRepo => issueRepo.GetAllObjects())
+                .ReturnsAsync(GetTestIssues());
+
+            var controller = GetIssueController(issueRepoMock: mockIssueRepo);
+
+            const string searchString = "Title#2";
+            var expectedModel = GetListOfIssueViewModel(GetTestIssues()).Where(m => m.Title.Contains(searchString));
+
+            // Act
+            var result = controller.Index(searchString);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal(expectedModel, viewResult.ViewData.Model);
+        }
+
+        [Fact]
         public void CreateIssue_ReturnsAViewResult_WithAListOfUsersAndPriorities()
         {
             // Arrange

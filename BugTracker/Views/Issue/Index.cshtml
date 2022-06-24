@@ -5,16 +5,17 @@
 }
 
 <div>
-    <div class="input-group">
-        <input type="search" class="form-control" placeholder="Search..." aria-label="Search..." aria-describedby="search-addon"/>
-        <button class="input-group-text">
-            <i class="fas fa-search"></i>
-        </button>
-
-        <a class="input-group-text" href="@Url.Action("CreateIssue", "Issue")" , role="button">
-            <i class="fas fa-plus"></i>
-        </a>
-    </div>
+    <form asp-controller="Issue" asp-action="Index">
+        <div class="input-group">
+            <input name="SearchString" type="search" class="form-control" placeholder="Search..." aria-label="Search..." aria-describedby="search-addon"/>
+            <button type="submit" class="input-group-text">
+                <i class="fas fa-search"></i>
+            </button>
+            <a class="input-group-text" href="@Url.Action("CreateIssue", "Issue")", role="button">
+                <i class="fas fa-plus"></i>
+            </a>
+        </div>
+    </form>
 </div>
 
 <table class="table table-responsive-xl">
