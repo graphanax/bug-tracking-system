@@ -67,7 +67,7 @@ namespace BugTracker.Controllers
 
         // Get request a form to add a new issue
         [HttpGet]
-        public ActionResult CreateIssue()
+        public IActionResult CreateIssue()
         {
             var model = new CreateIssueViewModel
             {
@@ -80,7 +80,7 @@ namespace BugTracker.Controllers
 
         // Post request to create a new issue
         [HttpPost]
-        public async Task<ActionResult> CreateIssue(CreateIssueViewModel formData)
+        public async Task<IActionResult> CreateIssue(CreateIssueViewModel formData)
         {
             if (!ModelState.IsValid)
                 return RedirectToAction(nameof(CreateIssue));
@@ -147,7 +147,7 @@ namespace BugTracker.Controllers
 
         // Get request a form to edit issue
         [HttpGet]
-        public ActionResult EditIssue(int issueId)
+        public IActionResult EditIssue(int issueId)
         {
             var issue = _issueRepository.GetObjectById(issueId).Result;
 
@@ -170,7 +170,7 @@ namespace BugTracker.Controllers
 
         // Post request to edit issue
         [HttpPost]
-        public async Task<ActionResult> EditIssue(EditIssueViewModel formData, int issueId)
+        public async Task<IActionResult> EditIssue(EditIssueViewModel formData, int issueId)
         {
             if (!ModelState.IsValid)
                 return RedirectToAction(nameof(EditIssue), issueId);
